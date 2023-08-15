@@ -2,7 +2,7 @@
 Setup CI pipeline for automatic React app deployment from gitLab repo to AWS EC2
 
 ##### Table of Contents  
-[1. Khởi tạo instance EC2 và cấu hình rule kết nối](## 1. Khởi tạo instance EC2 và cấu hình rule kết nối)
+[1. Khởi tạo instance EC2 và cấu hình rule kết nối](#1-khởi-tạo-instance-ec2-và-cấu-hình-rule-kết-nối)
 
 
 
