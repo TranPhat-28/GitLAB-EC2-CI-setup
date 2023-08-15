@@ -1,7 +1,13 @@
 # GitLAB-EC2-CI-setup
-Setup CI pipeline for automatic deployment from gitLab repo to AWS EC2
+Setup CI pipeline for automatic React app deployment from gitLab repo to AWS EC2
 
-1. Khởi tạo instance EC2 và cấu hình rule kết nối
+##### Table of Contents  
+[1. Khởi tạo instance EC2 và cấu hình rule kết nối](## 1. Khởi tạo instance EC2 và cấu hình rule kết nối)
+
+
+
+## 1. Khởi tạo instance EC2 và cấu hình rule kết nối
+
 ●	Khởi tạo một instance EC2 mới trên AWS
 ![image](https://github.com/TranPhat-28/GitLAB-EC2-CI-setup/assets/62002249/e1a881a7-d611-4e4f-8a86-fd2c5b441e98)
  
@@ -36,16 +42,17 @@ Setup CI pipeline for automatic deployment from gitLab repo to AWS EC2
 ![image](https://github.com/TranPhat-28/GitLAB-EC2-CI-setup/assets/62002249/f2e2a20f-1e1d-4b46-af61-7fdeaa369a41)
  
 ●	Chọn Add rule:
-  ○	Type chọn Custom TCP
-  ○	Port range nhập 80 (dùng để kết nối đến server nginx sau này)
-  ○	Source chọn Anywhere IPv4
-  ○	Chọn Save rules
+    - ○	Type chọn Custom TCP
+    - ○	Port range nhập 80 (dùng để kết nối đến server nginx sau này)
+    - ○	Source chọn Anywhere IPv4
+    - ○	Chọn Save rules
 ![image](https://github.com/TranPhat-28/GitLAB-EC2-CI-setup/assets/62002249/533771ad-bcc4-49e7-80fc-55132b5dec62)
  
 ●	Instance hiển thị Running là ok
 ![image](https://github.com/TranPhat-28/GitLAB-EC2-CI-setup/assets/62002249/0f4cf646-e2c9-45f9-87a2-f39537be64c3)
  
-2. Setup gitlab-runner
+## 2. Setup gitlab-runner
+
 ●	Ở Dashboard click vào tên instance và chọn connect
 ![image](https://github.com/TranPhat-28/GitLAB-EC2-CI-setup/assets/62002249/a4c47d8b-9aa9-4c8b-8e66-15871511af23)
  
@@ -79,6 +86,7 @@ $ gitlab-runner register
 ![image](https://github.com/TranPhat-28/GitLAB-EC2-CI-setup/assets/62002249/ea1c0e34-ed89-4985-a372-584f7d444b26)
  
 ●	Chọn Expand để mở phần Runner
+
 ![image](https://github.com/TranPhat-28/GitLAB-EC2-CI-setup/assets/62002249/62cf3e44-20a3-460a-9a9d-d0aa39660279)
  
 ●	Copy URL và registration token ở option 2 (Set up a specific runner for a project) và dán vào terminal:
@@ -95,6 +103,7 @@ $ gitlab-runner register
 ![image](https://github.com/TranPhat-28/GitLAB-EC2-CI-setup/assets/62002249/f998e403-1a85-4b55-b67c-41eae9c723bd)
 
 ●	Quay lại trang Settings của repo, refresh lại, nếu thấy có runner với đúng description và tag đã đặt trước đó là đã oke
+
 ![image](https://github.com/TranPhat-28/GitLAB-EC2-CI-setup/assets/62002249/6e9e35cb-be14-416b-9054-9013d4cc096e)
  
 ●	Để kiểm tra runner đã hoạt động chưa, tạo một file .gitlab-ci.yml trong root của repo (có thể tạo trực tiếp online luôn cho nhanh). tags ở đây là tag của runner mà lúc nãy bạn đặt
@@ -106,7 +115,8 @@ $ gitlab-runner register
 ●	Output Job succeeded như sau nghĩa là job đã thành công
 ![image](https://github.com/TranPhat-28/GitLAB-EC2-CI-setup/assets/62002249/16450c7d-2540-4652-86b5-e87065775e11)
  
-3. Clone và build React App
+## 3. Clone và build React App
+
 ●	Quay lại tab Instance Connect. Gõ CTRL + C để ngừng chạy gitlab-runner.
 ![image](https://github.com/TranPhat-28/GitLAB-EC2-CI-setup/assets/62002249/7b5af71e-74e7-487d-bd32-25255f778767)
  
@@ -126,8 +136,9 @@ $ cd ./build
 ●	Có thể dùng ls để xem nội dung của thư mục build vừa được tạo. Đường dẫn hiện tại của thư mục này là /home/ec2-user/<repo_name>/build
 ![image](https://github.com/TranPhat-28/GitLAB-EC2-CI-setup/assets/62002249/843a211f-3741-4238-9b3f-1e70c80564d4)
  
-4. Setup Nginx
+## 4. Setup Nginx
 ●	Khi build một React app sẽ thu được các file html, css, js. Các file này cần phải được đặt vào một web server để có thể hoạt động. Vì vậy cần phải cài đặt nginx để deploy app.
+
 ●	Đầu tiên cần phải có Nodejs và nginx (đã cài đặt ở bước trước). Chạy các lệnh sau để kiểm tra version:
 ![image](https://github.com/TranPhat-28/GitLAB-EC2-CI-setup/assets/62002249/ec74f5cf-96a0-41b2-bc86-898eccf9ba29)
 
@@ -149,10 +160,10 @@ $ sudo cp -r /home/ec2-user/sample-pipeline-app/build/* /var/www/myapp
 ![image](https://github.com/TranPhat-28/GitLAB-EC2-CI-setup/assets/62002249/8d0a3f65-33d6-4b8a-b0b6-395c74ae575b)
  
 ●	Dán nội dung file như sau, giải thích:
-  ○	nginx lắng nghe ở cổng 80
-  ○	Thư mục root là /var/www/myapp, ta đã copy toàn bộ file build vào đây
-  ○	Tìm file index là index, index.html hoặc index.htm
-  ○	Server name là tên server, ở đây là instance ec2 của chúng ta. Thay địa chỉ ip của ec2 vào đây
+    - ○	nginx lắng nghe ở cổng 80
+    - ○	Thư mục root là /var/www/myapp, ta đã copy toàn bộ file build vào đây
+    - ○	Tìm file index là index, index.html hoặc index.htm
+    - ○	Server name là tên server, ở đây là instance ec2 của chúng ta. Thay địa chỉ ip của ec2 vào đây
 
 ```
 server {
@@ -178,29 +189,34 @@ server {
 ●	Như vậy là server đã được setup xong. Mở tab mới và gõ địa chỉ ip public ec2 của chúng ta vào là sẽ truy cập được app:
 ![image](https://github.com/TranPhat-28/GitLAB-EC2-CI-setup/assets/62002249/607660f7-1830-47bf-bd3a-d662421e19a5)
 
-5. Chỉnh sửa file YML để hoàn tất CI pipeline
+## 5. Chỉnh sửa file YML để hoàn tất CI pipeline
+
 ●	Server nginx của chúng ta đã chạy. Bây giờ cần khởi chạy gitlab-runner lại và cài đặt file yml, để mỗi khi có commit mới lên repo, runner sẽ tự động thực hiện hết các tác vụ từ clone về, build, copy file và khởi chạy lại nginx.
+
 ●	Như vậy mỗi khi có commit mới, source code của ta sẽ được tự động cập nhật và deploy lên ec2 tự động và nhanh chóng nhất.
+
 ●	Đầu tiên, khởi chạy lại gitlab-runner
 ![image](https://github.com/TranPhat-28/GitLAB-EC2-CI-setup/assets/62002249/a13b76f4-d345-4c19-8c09-eafc6659ee8a)
 
 ●	Quay lại repo của chúng ta và chỉnh sửa file .gitlab-ci.yml như sau. Giải thích:
-  ○	Pipeline có 2 job sẽ được thực hiện:
-    ■	Build-job:
-      ●	Di chuyển vào thư mục app (thay sample-pipeline-app thành tên thư mục trên ec2 của bạn)
-      ●	checkout sang nhánh master. Ở đây chỉ deploy các thay đổi lên nhánh master
-      ●	pull origin về, cài đặt lại các thư viện mới và build lại
-    ■	Deploy-job:
-      ●	Copy đè lại các file build mới vào thư mục root để nginx đọc được
-      ●	Restart lại nginx
+    - ○	Pipeline có 2 job sẽ được thực hiện:
+        - ■	Build-job:
+            - ●	Di chuyển vào thư mục app (thay sample-pipeline-app thành tên thư mục trên ec2 của bạn)
+            - ●	checkout sang nhánh master. Ở đây chỉ deploy các thay đổi lên nhánh master
+            - ●	pull origin về, cài đặt lại các thư viện mới và build lại
+        - ■	Deploy-job:
+            - ●	Copy đè lại các file build mới vào thư mục root để nginx đọc được
+            - ●	Restart lại nginx
 ![image](https://github.com/TranPhat-28/GitLAB-EC2-CI-setup/assets/62002249/510a0109-316c-4e8c-9ebe-824886e06217)
 
 ●	Lưu và commit lại các thay đổi. Một pipeline mới sẽ tự động khởi chạy. Kết quả như sau là đã hoàn thành
 ![image](https://github.com/TranPhat-28/GitLAB-EC2-CI-setup/assets/62002249/d788d8cd-242c-4e5c-a1f7-f0f15d5183ab)
 ![image](https://github.com/TranPhat-28/GitLAB-EC2-CI-setup/assets/62002249/f57a1274-bc23-49d3-a088-1e8cab4a1223)
  
-6. Kết thúc
+## 6. Kết thúc
+
 ●	Như vậy là pipeline CI đã được cài đặt xong. Từ giờ, mọi thay đổi lên nhánh master sẽ được tự động deploy lên instance ec2 của chúng ta một cách nhanh chóng.
+
 ●	Thử thay đổi nội dung trong App.js và commit:
 ![image](https://github.com/TranPhat-28/GitLAB-EC2-CI-setup/assets/62002249/d4fd088b-979d-4f86-bd1f-5bbc332926ae)
  
